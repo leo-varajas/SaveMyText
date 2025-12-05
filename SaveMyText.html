@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaveMyText</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4a6cf7, #7a52e0);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .section {
+            background-color: #f8f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #6e8efb;
+        }
+        
+        .section-title {
+            color: #4a6cf7;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        textarea, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #6e8efb;
+            box-shadow: 0 0 0 2px rgba(110, 142, 251, 0.2);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: monospace;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #4a6cf7, #7a52e0);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #6c757d, #5a6268);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+        
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #eaeaea;
+            transition: transform 0.2s;
+        }
+        
+        .file-item:hover {
+            transform: translateX(5px);
+            border-color: #d0d7ff;
+        }
+        
+        .file-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .file-meta {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .password-form {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f2ff;
+            border-radius: 8px;
+        }
+        
+        .password-form.show {
+            display: block;
+        }
+        
+        .warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .warning p {
+            color: #856404;
+            font-size: 0.9rem;
+        }
+        
+        .cookie-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .cookie-count {
+            font-weight: bold;
+            color: #4a6cf7;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .file-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-file-alt"></i> SaveMyText </h1>
+            <p>Escribe cualquier cosa y almacenalo usando solo cookies del navegador. Protegidos por contraseña.</p>
+        </header>
+        
+        <div class="content">
+            <!-- Sección para crear nuevo archivo -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-plus-circle"></i> Crear Nuevo Archivo</h2>
+                <div class="form-group">
+                    <label for="filename">Nombre del archivo (con extensión .txt):</label>
+                    <input type="text" id="filename" placeholder="ejemplo.txt" value="documento.txt">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña para proteger el archivo:</label>
+                    <input type="password" id="password" placeholder="Escribe una contraseña" value="1234">
+                </div>
+                <div class="form-group">
+                    <label for="content">Contenido del archivo:</label>
+                    <textarea id="content" placeholder="Escribe el contenido de tu archivo aquí...">Este es el contenido de mi archivo de texto.
+Puede contener múltiples líneas.
+¡Y está protegido por contraseña!</textarea>
+                </div>
+                <div class="buttons">
+                    <button class="btn" id="saveBtn">
+                        <i class="fas fa-save"></i> Guardar en Cookies
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn">
+                        <i class="fas fa-broom"></i> Limpiar Campos
+                    </button>
+                </div>
+                <div class="cookie-info">
+                    <i class="fas fa-cookie-bite"></i>
+                    <span>Archivos guardados: <span class="cookie-count" id="fileCount">0</span></span>
+                </div>
+            </div>
+            
+            <!-- Sección para listar archivos guardados -->
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-folder-open"></i> Archivos Guardados</h2>
+                <div id="fileList" class="file-list">
+                    <!-- Los archivos aparecerán aquí dinámicamente -->
+                    <p id="noFilesMessage">No hay archivos guardados. Crea uno nuevo arriba.</p>
+                </div>
+            </div>
+            
+            <!-- Formulario para ingresar contraseña (oculto inicialmente) -->
+            <div id="passwordForm" class="password-form">
+                <h3 class="section-title"><i class="fas fa-lock"></i> Ingresar Contraseña</h3>
+                <p id="passwordPrompt">Por favor, ingresa la contraseña para descargar este archivo:</p>
+                <input type="password" id="downloadPassword" placeholder="Contraseña">
+                <div class="buttons">
+                    <button class="btn" id="confirmPasswordBtn">
+                        <i class="fas fa-download"></i> Descargar Archivo
+                    </button>
+                    <button class="btn btn-secondary" id="cancelPasswordBtn">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Información sobre limitaciones -->
+            <div class="warning">
+                <p><strong>Nota:</strong> Las cookies tienen limitaciones de almacenamiento (alrededor de 4KB por cookie y 50-100 cookies por dominio). Esta pagina web es completamente de codigo abierto y se puede usar en otras paginas web's.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let files = [];
+        let currentFileIndex = -1;
+        const MAX_FILE_SIZE = 3000; // Máximo tamaño por archivo (en caracteres)
+        const MAX_FILES = 10; // Máximo número de archivos
+        const COOKIE_PREFIX = "txt_file_";
+        
+        // Cargar archivos al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFilesFromCookies();
+            updateFileCount();
+            
+            // Event listeners para botones
+            document.getElementById('saveBtn').addEventListener('click', saveFile);
+            document.getElementById('clearBtn').addEventListener('click', clearForm);
+            document.getElementById('confirmPasswordBtn').addEventListener('click', downloadWithPassword);
+            document.getElementById('cancelPasswordBtn').addEventListener('click', cancelPassword);
+            
+            // Mostrar/ocultar formulario de contraseña
+            document.getElementById('downloadPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    downloadWithPassword();
+                }
+            });
+        });
+        
+        // Cargar archivos desde cookies
+        function loadFilesFromCookies() {
+            files = [];
+            
+            // Obtener todas las cookies
+            const cookies = document.cookie.split(';');
+            
+            // Filtrar cookies que empiezan con nuestro prefijo
+            for (const cookie of cookies) {
+                const trimmedCookie = cookie.trim();
+                if (trimmedCookie.startsWith(COOKIE_PREFIX)) {
+                    try {
+                        // Extraer datos de la cookie
+                        const cookieName = trimmedCookie.substring(0, trimmedCookie.indexOf('='));
+                        const cookieValue = decodeURIComponent(trimmedCookie.substring(trimmedCookie.indexOf('=') + 1));
+                        
+                        // Parsear el contenido de la cookie
+                        const fileData = JSON.parse(cookieValue);
+                        files.push(fileData);
+                    } catch (e) {
+                        console.error("Error al parsear cookie:", e);
+                    }
+                }
+            }
+            
+            renderFileList();
+        }
+        
+        // Guardar archivo en cookies
+        function saveFile() {
+            const filename = document.getElementById('filename').value.trim();
+            const password = document.getElementById('password').value;
+            const content = document.getElementById('content').value;
+            
+            // Validaciones
+            if (!filename) {
+                alert("Por favor, ingresa un nombre de archivo.");
+                return;
+            }
+            
+            if (!filename.endsWith('.txt')) {
+                alert("El nombre del archivo debe terminar con .txt");
+                return;
+            }
+            
+            if (!password) {
+                alert("Por favor, establece una contraseña para proteger el archivo.");
+                return;
+            }
+            
+            if (!content) {
+                alert("Por favor, ingresa contenido para el archivo.");
+                return;
+            }
+            
+            if (content.length > MAX_FILE_SIZE) {
+                alert(`El contenido es demasiado grande. Máximo permitido: ${MAX_FILE_SIZE} caracteres.`);
+                return;
+            }
+            
+            if (files.length >= MAX_FILES) {
+                alert(`Has alcanzado el límite máximo de ${MAX_FILES} archivos. Elimina algunos antes de crear nuevos.`);
+                return;
+            }
+            
+            // Verificar si el archivo ya existe
+            const existingIndex = files.findIndex(file => file.name === filename);
+            
+            // Crear objeto con los datos del archivo
+            const fileData = {
+                name: filename,
+                content: content,
+                password: password,
+                date: new Date().toLocaleString()
+            };
+            
+            // Guardar en cookie
+            const cookieName = COOKIE_PREFIX + encodeURIComponent(filename);
+            const cookieValue = encodeURIComponent(JSON.stringify(fileData));
+            
+            // Establecer cookie con expiración de 30 días
+            const expirationDate = new Date();
+            expirationDate.setDate(expirationDate.getDate() + 30);
+            document.cookie = `${cookieName}=${cookieValue}; expires=${expirationDate.toUTCString()}; path=/`;
+            
+            // Actualizar lista de archivos
+            if (existingIndex >= 0) {
+                files[existingIndex] = fileData;
+            } else {
+                files.push(fileData);
+            }
+            
+            renderFileList();
+            updateFileCount();
+            
+            // Confirmación
+            alert(`Archivo "${filename}" guardado correctamente. Se ha almacenado en cookies del navegador.`);
+        }
+        
+        // Renderizar lista de archivos
+        function renderFileList() {
+            const fileListElement = document.getElementById('fileList');
+            const noFilesMessage = document.getElementById('noFilesMessage');
+            
+            if (files.length === 0) {
+                if (!noFilesMessage) {
+                    const p = document.createElement('p');
+                    p.id = 'noFilesMessage';
+                    p.textContent = 'No hay archivos guardados. Crea uno nuevo arriba.';
+                    fileListElement.appendChild(p);
+                } else {
+                    noFilesMessage.style.display = 'block';
+                }
+                return;
+            }
+            
+            // Ocultar mensaje de "no hay archivos"
+            if (noFilesMessage) {
+                noFilesMessage.style.display = 'none';
+            }
+            
+            // Limpiar lista actual
+            fileListElement.innerHTML = '';
+            
+            // Crear elementos para cada archivo
+            files.forEach((file, index) => {
+                const fileElement = document.createElement('div');
+                fileElement.className = 'file-item';
+                
+                fileElement.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">Tamaño: ${file.content.length} caracteres | Creado: ${file.date}</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="btn" onclick="downloadFile(${index})">
+                            <i class="fas fa-download"></i> Descargar
+                        </button>
+                        <button class="btn btn-secondary" onclick="deleteFile(${index})">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </div>
+                `;
+                
+                fileListElement.appendChild(fileElement);
+            });
+        }
+        
+        // Descargar archivo (solicitará contraseña)
+        function downloadFile(index) {
+            currentFileIndex = index;
+            const file = files[index];
+            
+            // Mostrar formulario de contraseña
+            document.getElementById('passwordPrompt').textContent = 
+                `Por favor, ingresa la contraseña para descargar "${file.name}":`;
+            document.getElementById('passwordForm').classList.add('show');
+            document.getElementById('downloadPassword').focus();
+        }
+        
+        // Verificar contraseña y descargar archivo
+        function downloadWithPassword() {
+            const passwordInput = document.getElementById('downloadPassword').value;
+            const file = files[currentFileIndex];
+            
+            if (passwordInput === file.password) {
+                // Crear blob y descargar archivo
+                const blob = new Blob([file.content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                // Limpiar y ocultar formulario
+                cancelPassword();
+                
+                // Mostrar mensaje de éxito
+                alert(`Archivo "${file.name}" descargado correctamente.`);
+            } else {
+                alert("Contraseña incorrecta. Intenta nuevamente.");
+                document.getElementById('downloadPassword').focus();
+                document.getElementById('downloadPassword').select();
+            }
+        }
+        
+        // Cancelar descarga
+        function cancelPassword() {
+            document.getElementById('passwordForm').classList.remove('show');
+            document.getElementById('downloadPassword').value = '';
+            currentFileIndex = -1;
+        }
+        
+        // Eliminar archivo
+        function deleteFile(index) {
+            const file = files[index];
+            
+            if (confirm(`¿Estás seguro de que quieres eliminar "${file.name}"?`)) {
+                // Eliminar cookie
+                const cookieName = COOKIE_PREFIX + encodeURIComponent(file.name);
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                
+                // Eliminar de la lista
+                files.splice(index, 1);
+                
+                // Actualizar vista
+                renderFileList();
+                updateFileCount();
+                
+                alert(`Archivo "${file.name}" eliminado correctamente.`);
+            }
+        }
+        
+        // Limpiar formulario
+        function clearForm() {
+            document.getElementById('filename').value = 'documento.txt';
+            document.getElementById('password').value = '1234';
+            document.getElementById('content').value = '';
+            document.getElementById('filename').focus();
+        }
+        
+        // Actualizar contador de archivos
+        function updateFileCount() {
+            document.getElementById('fileCount').textContent = files.length;
+        }
+    </script>
+</body>
+</html>
